@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix Global</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: white; color: black; }
+        
+        /* Header Section */
+        .header { background-color: turquoise; text-align: center; padding: 20px; }
+        .header h1 { text-decoration: underline; margin: 10px 0; }
+        .logo { width: 100px; height: auto; }
+
+        /* Search Section */
+        .search-container { text-align: center; padding: 40px; }
+        #searchBar { width: 50%; padding: 15px; font-size: 18px; border-radius: 25px; border: 1px solid #ccc; }
+
+        /* Panels */
+        .panels-container { display: flex; justify-content: center; gap: 20px; padding: 20px; }
+        .panel { width: 300px; height: 400px; text-align: center; border: 1px solid #ddd; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .banner { width: 100%; height: 200px; background-size: cover; background-position: center; }
+        
+        /* Handwriting font style */
+        .list-style { font-family: 'Forte', cursive; font-size: 20px; text-align: left; list-style-type: none; padding: 0; }
+
+        /* Footer */
+        .footer { background-color: black; color: white; padding: 20px; text-align: center; margin-top: 50px; }
+        .footer a { color: white; margin: 0 15px; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="logo.jpg" alt="Logo" class="logo">
+        <h1>MATRIX GLOBAL</h1>
+        <p>Everything Global in One Portal.</p>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search courses, universities, visas..." onkeydown="handleSearch(event)">
+    </div>
+
+    <div class="panels-container">
+        <!-- Panel 1 -->
+        <div class="panel" onclick="window.location='xxx.github.io/CourseMatrix'">
+            <div class="banner" style="background-image: url('Banner1.jpg');"></div>
+            <h2>Course Matrix</h2>
+            <ul class="list-style">
+                <li>1. Discover global universities</li>
+                <li>2. Compare programs</li>
+                <li>3. Global online programs</li>
+                <li>4. Top universities & more</li>
+            </ul>
+        </div>
+
+        <!-- Panel 2 -->
+        <div class="panel" onclick="window.location='xxx.github.io/RankMatrix'">
+            <div class="banner" style="background-image: url('Banner2.jpg');"></div>
+            <h2>Rank Matrix</h2>
+            <ul class="list-style">
+                <li>1. QS rankings</li>
+                <li>2. ARWU rankings</li>
+                <li>3. Employability score</li>
+                <li>4. Comparisons & more</li>
+            </ul>
+        </div>
+
+        <!-- Panel 3 -->
+        <div class="panel" onclick="window.location='xxx.github.io/VisaNexa'">
+            <div class="banner" style="background-image: url('Banner3.jpg');"></div>
+            <h2>Visa Nexa</h2>
+            <ul class="list-style">
+                <li>1. Visa processes</li>
+                <li>2. Visa fees</li>
+                <li>3. Document requirements</li>
+                <li>4. Work permit info & more</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>About</span> | <span>Disclaimer</span> | <span>Privacy statement</span> | <span>Contact Us</span>
+    </div>
+
+    <script>
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                let query = document.getElementById('searchBar').value.toLowerCase();
+                if (query.includes('course') || query.includes('program') || query.includes('universities')) {
+                    window.location = 'xxx.github.io/CourseMatrix';
+                } else if (query.includes('qs') || query.includes('arwu') || query.includes('cwur') || query.includes('rankings') || query.includes('employability')) {
+                    window.location = 'xxx.github.io/RankMatrix';
+                } else if (query.includes('visa')) {
+                    window.location = 'xxx.github.io/VisaNexa';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
