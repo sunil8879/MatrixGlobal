@@ -113,6 +113,42 @@
         width: 85%;             /* Makes search bar wider on mobile */
     }
 }
+
+
+
+
+
+
+
+/* Stats Grid */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    background: #f8f9fa; /* Light grey for contrast */
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: white;
+    border: 2px solid turquoise;
+    padding: 20px;
+    width: 150px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-card i { color: turquoise; font-size: 28px; margin-bottom: 10px; }
+.stat-card h3 { margin: 5px 0; font-size: 20px; color: black; }
+.stat-card p { margin: 0; font-size: 12px; font-weight: bold; color: black; text-transform: uppercase; }
+
+/* Mobile Stack */
+@media screen and (max-width: 800px) {
+    .stats-container { flex-direction: row; } /* Keep row or use flex-wrap */
+    .stat-card { width: 40%; margin-bottom: 15px; }
+}
     </style>
 </head>
 <body>
@@ -164,6 +200,41 @@
             </ol>
         </div>
     </div>
+
+
+
+
+<div class="stats-container" id="stats">
+    <div class="stat-card">
+        <i class="fas fa-book"></i>
+        <h3 class="counter" data-target="300000">0</h3>
+        <p>Courses</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-university"></i>
+        <h3 class="counter" data-target="17000">0</h3>
+        <p>Universities</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-globe-americas"></i>
+        <h3 class="counter" data-target="100">0</h3>
+        <p>Countries</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-trophy"></i>
+        <h3 class="counter" data-target="500">0</h3>
+        <p>Rankings</p>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-passport"></i>
+        <h3 class="counter" data-target="95">0</h3>
+        <p>Visa Intelligence</p>
+    </div>
+</div>
+
+
+
+
 
 <div class="footer">
     <a href="about.html">
