@@ -222,7 +222,7 @@
     </div>
     <div class="stat-card">
         <i class="fas fa-trophy"></i>
-        <h3 class="counter" data-target="500">0</h3>
+        <h3 class="counter" data-target="1000">0</h3>
         <p>Rankings</p>
     </div>
     <div class="stat-card">
@@ -265,5 +265,44 @@
             }
         }
     </script>
+
+
+
+
+
+
+
+<script>
+const counters = document.querySelectorAll('.counter');
+const speed = 200; // The lower the slower
+
+const runCounter = () => {
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const inc = target / speed;
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + inc);
+                setTimeout(updateCount, 10);
+            } else {
+                counter.innerText = target + "+";
+            }
+        };
+        updateCount();
+    });
+};
+
+// Trigger when user scrolls to the section
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+        runCounter();
+        observer.disconnect();
+    }
+}, { threshold: 0.5 });
+
+observer.observe(document.getElementById('stats'));
+</script>
 </body>
 </html>
