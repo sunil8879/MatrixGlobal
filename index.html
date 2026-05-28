@@ -18,7 +18,32 @@
 
         /* Search Section */
         .search-container { text-align: center; padding: 40px; }
-        #searchBar { width: 50%; padding: 15px; font-size: 18px; border-radius: 25px; border: 1px solid #ccc; }
+#searchBar { 
+    width: 50%; 
+    padding: 15px; 
+    font-size: 18px; 
+    border-radius: 25px; 
+    /* Turquoise background */
+    background-color: turquoise; 
+    /* Dark border to match the panels */
+    border: 2px solid #333; 
+    /* Ensure text is readable */
+    color: black; 
+    font-weight: bold;
+}
+
+/* Optional: Change placeholder color so it's readable against the turquoise */
+#searchBar::placeholder {
+    color: #333;
+    opacity: 0.8;
+}
+
+/* Add a hover/focus effect so the user knows it's active */
+#searchBar:focus {
+    outline: none;
+    background-color: #40e0d0; /* Slightly darker turquoise when clicked */
+    border-color: blue;
+}
 
         /* Panels */
         .panels-container { display: flex; justify-content: center; gap: 20px; padding: 20px; }
