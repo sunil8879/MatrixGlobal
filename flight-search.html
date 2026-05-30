@@ -1,41 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Flight Search</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
-        input { padding: 10px; width: 300px; }
-        button { padding: 10px 20px; background-color: turquoise; border: 2px solid #333; cursor: pointer; font-weight: bold; }
-        #flightResults { margin-top: 20px; text-align: left; background: #f4f4f4; padding: 15px; border-radius: 8px; white-space: pre-wrap; }
-    </style>
 </head>
 <body>
     <h1>Flight Search</h1>
-    <input type="text" id="flightInput" placeholder="Enter Airline Code (e.g., AI, SIA)">
+    <input type="text" id="depInput" placeholder="Departure ID (e.g. DEL)">
+    <input type="text" id="arrInput" placeholder="Arrival ID (e.g. LHR)">
     <button onclick="runFlightSearch()">Search Flights</button>
     
     <div id="flightResults">Results will appear here...</div>
 
     <script>
         async function runFlightSearch() {
-            const airline = document.getElementById('flightInput').value;
+            const dep = document.getElementById('depInput').value;
+            const arr = document.getElementById('arrInput').value;
             const div = document.getElementById('flightResults');
             div.innerText = "Searching...";
             
-            const FLIGHT_KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91"; // Replace with your key
+            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91"; // PUT YOUR KEY HERE
             
             try {
-                const response = await fetch(`https://flight-data4.p.rapidapi.com/get_airline_flights?airline=${airline}`, {
+                const response = await fetch(`https://google-flights2.p.rapidapi.com/api/v1/searchFlights?departure_id=${dep}&arrival_id=${arr}&travel_class=ECONOMY&adults=1&currency=USD`, {
                     headers: { 
-                        'X-RapidAPI-Key': FLIGHT_KEY, 
-                        'X-RapidAPI-Host': 'flight-data4.p.rapidapi.com' 
+                        'X-RapidAPI-Key': KEY, 
+                        'X-RapidAPI-Host': 'google-flights2.p.rapidapi.com' 
                     }
                 });
                 const data = await response.json();
                 div.innerText = JSON.stringify(data, null, 2);
             } catch (err) {
-                div.innerText = "Error: Could not fetch flights.";
+                div.innerText = "Error: " + err.message;
             }
         }
     </script>
