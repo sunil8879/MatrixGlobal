@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Matrix Search</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        input { padding: 10px; width: 300px; }
+        button { padding: 10px 20px; background-color: turquoise; border: 2px solid #333; cursor: pointer; font-weight: bold; }
+        #flightResults { margin-top: 20px; text-align: left; background: #f4f4f4; padding: 15px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <h1>Flight Matrix Search</h1>
+    <input type="text" id="flightInput" placeholder="e.g. Delhi to London">
+    <button onclick="runFlightSearch()">Search Flights</button>
+    
+    <div id="flightResults">Results will appear here...</div>
+
+    <script>
+        async function runFlightSearch() {
+            const query = document.getElementById('flightInput').value;
+            const div = document.getElementById('flightResults');
+            div.innerText = "Searching... please wait...";
+            
+            // YOUR KEY GOES HERE
+            const FLIGHT_KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91"; 
+            
+            const response = await fetch(`https://flightdata1.p.rapidapi.com/search?q=${query}`, {
+                method: 'GET',
+                headers: { 
+                    'X-RapidAPI-Key': FLIGHT_KEY, 
+                    'X-RapidAPI-Host': 'flightdata4.p.rapidapi.com' 
+                }
+            });
+            
+            const data = await response.json();
+            div.innerText = JSON.stringify(data, null, 2); 
+        }
+    </script>
+</body>
+</html>

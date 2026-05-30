@@ -401,6 +401,28 @@ text-align: center;
     0% { transform: translate(0, 0); }
     100% { transform: translate(-100%, 0); }
 }
+
+
+
+
+
+button {
+    background-color: turquoise;
+    border: 2px solid #333;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+input {
+    padding: 10px;
+    border: 1px solid #333;
+}
+#flightResults, #hotelResults {
+    margin-top: 10px;
+    font-size: 12px;
+    background: #eee;
+    padding: 10px;
+}
     </style>
 </head>
 <body>
@@ -487,6 +509,44 @@ text-align: center;
                 <li>Must-Know CV & Career Guides</li>
             </ol>
         </div>
+
+
+
+
+
+
+
+
+
+<!-- Panel 5 -->
+        <div class="panel" onclick="window.location='flight-search.html'">
+            <div class="banner" style="background-color: turquoise; display: flex; align-items: center; justify-content: center; font-size: 60px; color: white;">
+                <i class="fas fa-plane"></i>
+            </div>
+            <h2>Flight Matrix</h2>
+            <ol class="list-style">
+                <li>Live flight search</li>
+                <li>Compare airline prices</li>
+                <li>Baggage policy details</li>
+                <li>Student fare updates</li>
+            </ol>
+        </div>
+
+        <!-- Panel 6 -->
+        <div class="panel" onclick="window.location='hotel-search.html'">
+            <div class="banner" style="background-color: turquoise; display: flex; align-items: center; justify-content: center; font-size: 60px; color: white;">
+                <i class="fas fa-bed"></i>
+            </div>
+            <h2>Stay Matrix</h2>
+            <ol class="list-style">
+                <li>Hostel search</li>
+                <li>Budget hotel deals</li>
+                <li>University area stays</li>
+                <li>Booking insights</li>
+            </ol>
+        </div>
+
+
     </div>
 
 
@@ -2664,6 +2724,40 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 
 observer.observe(document.getElementById('stats'));
+</script>
+
+
+
+
+
+
+<script>
+    const FLIGHT_KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
+    const HOTEL_KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
+
+    async function runFlightSearch() {
+        const query = document.getElementById('flightInput').value;
+        const div = document.getElementById('flightResults');
+        div.innerHTML = "Searching...";
+        
+        const response = await fetch(`https://flightdata1.p.rapidapi.com/search?q=${query}`, {
+            headers: { 'X-RapidAPI-Key': FLIGHT_KEY, 'X-RapidAPI-Host': 'flightdata4.p.rapidapi.com' }
+        });
+        const data = await response.json();
+        div.innerHTML = JSON.stringify(data); // Displays results
+    }
+
+    async function runHotelSearch() {
+        const query = document.getElementById('hotelInput').value;
+        const div = document.getElementById('hotelResults');
+        div.innerHTML = "Searching...";
+        
+        const response = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchLocation?query=${query}`, {
+            headers: { 'X-RapidAPI-Key': HOTEL_KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
+        });
+        const data = await response.json();
+        div.innerHTML = JSON.stringify(data); // Displays results
+    }
 </script>
 </body>
 </html>
