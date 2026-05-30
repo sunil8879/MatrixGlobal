@@ -2,88 +2,115 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hotel Search</title>
+<title>Stay Matrix - Hotel Search</title>
 
 <style>
 body {
     font-family: Arial;
     text-align: center;
     padding: 20px;
+    background: #f5f5f5;
 }
 
 input, button {
     padding: 10px;
     margin: 5px;
+    width: 250px;
+}
+
+button {
+    cursor: pointer;
+    background: turquoise;
+    border: none;
+    color: white;
+    font-weight: bold;
 }
 
 .card {
-    border: 2px solid #4caf50;
+    background: white;
+    border-left: 5px solid turquoise;
     margin: 10px auto;
-    width: 85%;
-    padding: 12px;
-    border-radius: 10px;
+    width: 80%;
+    padding: 15px;
+    border-radius: 8px;
     text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 </style>
 </head>
 
 <body>
 
-<h1>🏨 Hotel Details</h1>
+<h1>🏨 Stay Matrix - Hotel Search</h1>
 
-<input type="text" id="query" placeholder="Enter city (e.g. Pattaya)">
-<input type="date" id="date">
+<input type="text" id="city" placeholder="Enter city (e.g. Mumbai)">
 <button onclick="searchHotels()">Search</button>
 
 <div id="results"></div>
 
 <script>
 
+const API_KEY = "13ea896566ee41ad87e7d992704b8cf4";
+
 async function searchHotels() {
 
-    const query = document.getElementById("query").value;
-    const date = document.getElementById("date").value;
+    const city = document.getElementById("city").value;
     const div = document.getElementById("results");
 
-    div.innerHTML = "Searching...";
+    if (!city) {
+        div.innerHTML = "Please enter a city";
+        return;
+    }
 
-    const url =
-    `https://travel-advisor.p.rapidapi.com/locations/search?query=${query}&limit=30&offset=0&units=km&location_id=1&currency=USD&sort=relevance&lang=en_US`;
+    div.innerHTML = "Searching hotels...";
 
     try {
 
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "X-RapidAPI-Key": "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91",
-                "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com"
-            }
-        });
+        // Step 1: Get coordinates from city name
+        const geoUrl =
+        `https://api.geoapify.com/v1/geocode/search?text=${city}&limit=1&apiKey=${API_KEY}`;
 
-        if (!response.ok) throw new Error("API error " + response.status);
+        const geoRes = await fetch(geoUrl);
+        const geoData = await geoRes.json();
 
-        const data = await response.json();
+        if (!geoData.features.length) {
+            div.innerHTML = "City not found";
+            return;
+        }
 
-        const hotels = data?.data || [];
+        const lat = geoData.features[0].properties.lat;
+        const lon = geoData.features[0].properties.lon;
 
-        if (!hotels.length) {
+        // Step 2: Search hotels around location
+        const hotelUrl =
+        `https://api.geoapify.com/v2/places?categories=accommodation.hotel,accommodation.hostel&filter=circle:${lon},${lat},5000&limit=20&apiKey=${API_KEY}`;
+
+        const hotelRes = await fetch(hotelUrl);
+        const hotelData = await hotelRes.json();
+
+        const places = hotelData.features;
+
+        if (!places.length) {
             div.innerHTML = "No hotels found";
             return;
         }
 
-        let html = "<h2>Hotel Results</h2>";
+        let html = "<h2>Available Stays</h2>";
 
-        hotels.forEach((h, i) => {
+        places.forEach(p => {
+
+            const name = p.properties.name || "Unnamed Stay";
+            const address = p.properties.formatted || "No address";
+            const type = p.properties.categories?.[0] || "Accommodation";
 
             html += `
-            <div class="card">
-                <p><strong>Name of Hotel:</strong> ${h.name || "N/A"}</p>
-                <p><strong>Location:</strong> ${h.location_string || query}</p>
-                <p><strong>Room Type:</strong> Standard / Deluxe (API not provided)</p>
-                <p><strong>Cost:</strong> $ --- (depends on provider)</p>
-                <p><strong>Amenities:</strong> Not fully available from API</p>
-                <p><strong>Date of Arrival:</strong> ${date || "N/A"}</p>
-            </div>
+                <div class="card">
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Location:</strong> ${address}</p>
+                    <p><strong>Type:</strong> ${type}</p>
+                    <p><strong>Room Type:</strong> Dorm / Private (varies)</p>
+                    <p><strong>Cost:</strong> ₹ -- (not provided by API)</p>
+                </div>
             `;
         });
 
@@ -91,7 +118,7 @@ async function searchHotels() {
 
     } catch (err) {
         console.error(err);
-        div.innerHTML = "Error fetching hotel data.";
+        div.innerHTML = "Error fetching hotels";
     }
 }
 
