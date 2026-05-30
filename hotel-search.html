@@ -2,19 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Stay Search</title>
+    <title>Hotel Search</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
-        input { padding: 10px; width: 300px; }
-        button { padding: 10px 20px; background-color: turquoise; border: 2px solid #333; cursor: pointer; font-weight: bold; }
-        #hotelResults { margin-top: 20px; text-align: left; background: #f4f4f4; padding: 15px; border-radius: 8px; }
+        .card { border: 2px solid turquoise; margin: 10px auto; padding: 15px; width: 80%; border-radius: 10px; text-align: left; }
     </style>
 </head>
 <body>
     <h1>Stay Search</h1>
-    <input type="text" id="hotelInput" placeholder="Enter city name (e.g. London)">
-    <button onclick="runHotelSearch()">Search Destinations</button>
-    <div id="hotelResults">Results will appear here...</div>
+    <input type="text" id="hotelInput" placeholder="Enter city name...">
+    <button onclick="runHotelSearch()">Search Hotels</button>
+    <div id="hotelResults"></div>
 
     <script>
         async function runHotelSearch() {
@@ -22,22 +20,32 @@
             const div = document.getElementById('hotelResults');
             div.innerText = "Searching...";
             
-            const HOTEL_KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91"; // REPLACE WITH YOUR KEY
+            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
             
             try {
-                const res = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination?query=${city}`, {
-                    headers: { 'X-RapidAPI-Key': HOTEL_KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
+                // 1. Get Destination ID
+                const locRes = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination?query=${city}`, {
+                    headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
                 });
-                const response = await res.json();
-                
-                let html = "<h3>Destinations Found:</h3><ul>";
-                response.data.forEach(item => {
-                    html += `<li><strong>${item.name}</strong> - ${item.country} (${item.hotels} hotels)</li>`;
+                const locData = await locRes.json();
+                const dest_id = locData.data[0].dest_id;
+
+                // 2. Get Hotels
+                const res = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels?dest_id=${dest_id}&search_type=CITY`, {
+                    headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
                 });
-                div.innerHTML = html + "</ul>";
-            } catch (err) {
-                div.innerText = "Error: Could not find city. Try a major city.";
-            }
+                const hotelData = await res.json();
+
+                let html = "<h3>Top Hotels:</h3>";
+                hotelData.data.hotels.forEach(h => {
+                    html += `<div class="card">
+                        <p><strong>Hotel:</strong> ${h.property.name}</p>
+                        <p><strong>Price:</strong> ${h.property.priceBreakdown.grossPrice.value} ${h.property.priceBreakdown.grossPrice.currency}</p>
+                        <p><strong>Review:</strong> ${h.property.reviewScore || 'N/A'}</p>
+                    </div>`;
+                });
+                div.innerHTML = html;
+            } catch (err) { div.innerText = "Error finding hotels."; }
         }
     </script>
 </body>
