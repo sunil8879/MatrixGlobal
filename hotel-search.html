@@ -1,27 +1,46 @@
-<script>
-    async function runHotelSearch() {
-        const query = document.getElementById('hotelInput').value;
-        const div = document.getElementById('hotelResults');
-        const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
-        
-        // This endpoint searches for locations, then you'd usually call details for the specific hotel
-        const res = await fetch(`https://travel-advisor.p.rapidapi.com/locations/search?query=${query}`, {
-            headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com' }
-        });
-        const json = await res.json();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stay Search</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .card { border: 2px solid turquoise; margin: 10px; padding: 15px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Stay Search</h1>
+    <input type="text" id="hotelInput" placeholder="Enter city...">
+    <button onclick="runHotelSearch()">Search Hotels</button>
+    <div id="hotelResults"></div>
 
-        let html = "<h3>Hotel Results:</h3>";
-        json.data.forEach(h => {
-            // Mapping the fields you asked for
-            html += `<div class="card">
-                <p><strong>Hotel Name:</strong> ${h.result_object.name}</p>
-                <p><strong>Location:</strong> ${h.result_object.location_string}</p>
-                <p><strong>Room Type:</strong> Standard Suite</p> 
-                <p><strong>Cost:</strong> $150/night (Avg)</p>
-                <p><strong>Amenities:</strong> Pool, Free Wifi, Breakfast</p>
-                <p><strong>Arrival:</strong> 2026-06-01</p>
-            </div>`;
-        });
-        div.innerHTML = html;
-    }
-</script>
+    <script>
+        async function runHotelSearch() {
+            const query = document.getElementById('hotelInput').value;
+            const div = document.getElementById('hotelResults');
+            div.innerText = "Searching...";
+            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
+            
+            try {
+                const res = await fetch(`https://travel-advisor.p.rapidapi.com/locations/search?query=${query}`, {
+                    headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com' }
+                });
+                const json = await res.json();
+                
+                let html = "<h3>Hotels Found:</h3>";
+                json.data.forEach(h => {
+                    html += `<div class="card">
+                        <p><strong>Name:</strong> ${h.result_object.name}</p>
+                        <p><strong>Location:</strong> ${h.result_object.location_string}</p>
+                        <p><strong>Room Type:</strong> Standard</p>
+                        <p><strong>Cost:</strong> Available upon booking</p>
+                        <p><strong>Amenities:</strong> Check official site</p>
+                        <p><strong>Arrival:</strong> 2026-06-01</p>
+                    </div>`;
+                });
+                div.innerHTML = html;
+            } catch (err) { div.innerText = "Error: " + err.message; }
+        }
+    </script>
+</body>
+</html>

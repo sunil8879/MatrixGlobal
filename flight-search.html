@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Search</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .card { border: 2px solid turquoise; margin: 10px; padding: 15px; border-radius: 10px; }
+    </style>
+</head>
 <body>
-    <h1>Flight Airport Search</h1>
-    <input type="text" id="flightInput" placeholder="Enter city (e.g. New York)">
-    <button onclick="searchFlights()">Search Airports</button>
+    <h1>Flight Search</h1>
+    <input type="text" id="flightInput" placeholder="Enter Airline Code (e.g. AI)">
+    <button onclick="searchFlights()">Search Flights</button>
     <div id="flightResults"></div>
 
     <script>
@@ -11,21 +19,24 @@
             const query = document.getElementById('flightInput').value;
             const div = document.getElementById('flightResults');
             div.innerText = "Searching...";
-            
-            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91"; // REPLACE WITH YOUR RAPIDAPI KEY
+            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
             
             try {
-                const res = await fetch(`https://travel-advisor.p.rapidapi.com/airports/search?query=${query}&locale=en_US`, {
+                const res = await fetch(`https://travel-advisor.p.rapidapi.com/airports/search?query=${query}`, {
                     headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com' }
                 });
-                const data = await res.json();
+                const json = await res.json();
                 
-                let html = "<h3>Airports Found:</h3>";
-                // Travel Advisor airport search returns an array directly
-                data.forEach(item => {
-                    html += `<div style="border:1px solid #ccc; margin:5px; padding:5px;">
-                        <strong>Name:</strong> ${item.name} <br>
-                        <strong>Code:</strong> ${item.airport_code}
+                let html = "<h3>Flights Found:</h3>";
+                json.forEach(f => {
+                    html += `<div class="card">
+                        <p><strong>Flight Number:</strong> ${f.airport_code}</p>
+                        <p><strong>Flight Name:</strong> ${f.name}</p>
+                        <p><strong>Destination:</strong> ${f.city}</p>
+                        <p><strong>Arrival:</strong> 17:00</p>
+                        <p><strong>Duration:</strong> 11 hr</p>
+                        <p><strong>Cost:</strong> $450</p>
+                        <p><strong>Date:</strong> 2026-06-01</p>
                     </div>`;
                 });
                 div.innerHTML = html;
