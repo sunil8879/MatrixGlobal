@@ -373,10 +373,51 @@ text-align: center;
 
 
 
-<div class="ticker-wrapper">
-    <div class="ticker-title">LIVE EDU NEWS</div>
-    <div class="ticker-content" id="newsTicker">Fetching latest global education updates...</div>
-</div>
+
+
+
+.ticker-wrapper {
+    background: #000;
+    color: #7FFFD4;
+    padding: 10px 0;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 2px solid turquoise;
+}
+.ticker-title {
+    font-weight: 900;
+    padding: 0 20px;
+    border-right: 2px solid #7FFFD4;
+    z-index: 10;
+    background: #000;
+}
+.ticker-container {
+    flex-grow: 1;
+    overflow: hidden;
+}
+.ticker-content {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 40s linear infinite;
+}
+.ticker-content a {
+    color: #7FFFD4;
+    text-decoration: none;
+    margin-right: 50px;
+    font-size: 16px;
+}
+.ticker-content a:hover { text-decoration: underline; }
+
+@keyframes marquee {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
+
+
+
+
 
 
 
@@ -2552,9 +2593,11 @@ You track all spending via the provider's mobile app. This is safer and more eff
 
 
 
+
+
 <script>
     async function fetchNews() {
-        const rssUrl = "https://thepienews.com/feed/"; // Live global education news source
+        const rssUrl = "https://thepienews.com/feed/";
         const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
         
         try {
@@ -2563,15 +2606,21 @@ You track all spending via the provider's mobile app. This is safer and more eff
             const ticker = document.getElementById('newsTicker');
             
             if(data.status === 'ok') {
-                const headlines = data.items.map(item => item.title).join("  •  •  •  ");
-                ticker.innerText = headlines;
+                // Creates clickable links for each headline
+                const headlines = data.items.map(item => 
+                    `<a href="${item.link}" target="_blank">${item.title}</a>`
+                ).join("  •  •  •  ");
+                
+                ticker.innerHTML = headlines;
             }
         } catch (err) {
-            ticker.innerText = "Stay updated with global education trends.";
+            document.getElementById('newsTicker').innerText = "Global Education News | Stay Tuned for updates.";
         }
     }
     fetchNews();
 </script>
+
+
 
 
 
