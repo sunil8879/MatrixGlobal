@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hotel Search</title>
+    <title>Stay Search</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
         .card { border: 2px solid turquoise; margin: 10px auto; padding: 15px; width: 80%; border-radius: 10px; text-align: left; }
@@ -18,20 +18,19 @@
         async function runHotelSearch() {
             const city = document.getElementById('hotelInput').value;
             const div = document.getElementById('hotelResults');
-            div.innerText = "Searching...";
-            
             const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
             
             try {
-                // 1. Get Destination ID
+                div.innerText = "Searching...";
                 const locRes = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination?query=${city}`, {
                     headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
                 });
                 const locData = await locRes.json();
+                
+                if (!locData.data || locData.data.length === 0) throw new Error("No city found");
                 const dest_id = locData.data[0].dest_id;
 
-                // 2. Get Hotels
-                const res = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels?dest_id=${dest_id}&search_type=CITY`, {
+                const res = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels?dest_id=${dest_id}&search_type=CITY&adults=1&room_qty=1&page_number=1`, {
                     headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
                 });
                 const hotelData = await res.json();
@@ -40,12 +39,15 @@
                 hotelData.data.hotels.forEach(h => {
                     html += `<div class="card">
                         <p><strong>Hotel:</strong> ${h.property.name}</p>
-                        <p><strong>Price:</strong> ${h.property.priceBreakdown.grossPrice.value} ${h.property.priceBreakdown.grossPrice.currency}</p>
+                        <p><strong>Price:</strong> ${h.property.priceBreakdown?.grossPrice?.value || 'N/A'}</p>
                         <p><strong>Review:</strong> ${h.property.reviewScore || 'N/A'}</p>
                     </div>`;
                 });
                 div.innerHTML = html;
-            } catch (err) { div.innerText = "Error finding hotels."; }
+            } catch (err) {
+                console.error(err);
+                div.innerText = "Error: " + err.message;
+            }
         }
     </script>
 </body>
