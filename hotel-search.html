@@ -15,40 +15,36 @@
     <div id="hotelResults"></div>
 
     <script>
-        async function runHotelSearch() {
-            const city = document.getElementById('hotelInput').value;
-            const div = document.getElementById('hotelResults');
-            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
-            
-            try {
-                div.innerText = "Searching...";
-                const locRes = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination?query=${city}`, {
-                    headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
-                });
-                const locData = await locRes.json();
-                
-                if (!locData.data || locData.data.length === 0) throw new Error("No city found");
-                const dest_id = locData.data[0].dest_id;
+async function runHotelSearch() {
+    const city = document.getElementById('hotelInput').value;
+    const div = document.getElementById('hotelResults');
+    const KEY = "YOUR_BOOKING_KEY";
+    
+    try {
+        const locRes = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination?query=${city}`, {
+            headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
+        });
+        const locData = await locRes.json();
+        const dest_id = locData[0].dest_id; 
 
-                const res = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels?dest_id=${dest_id}&search_type=CITY&adults=1&room_qty=1&page_number=1`, {
-                    headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
-                });
-                const hotelData = await res.json();
+        const res = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels?dest_id=${dest_id}&search_type=CITY`, {
+            headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' }
+        });
+        const hotelData = await res.json();
 
-                let html = "<h3>Top Hotels:</h3>";
-                hotelData.data.hotels.forEach(h => {
-                    html += `<div class="card">
-                        <p><strong>Hotel:</strong> ${h.property.name}</p>
-                        <p><strong>Price:</strong> ${h.property.priceBreakdown?.grossPrice?.value || 'N/A'}</p>
-                        <p><strong>Review:</strong> ${h.property.reviewScore || 'N/A'}</p>
-                    </div>`;
-                });
-                div.innerHTML = html;
-            } catch (err) {
-                console.error(err);
-                div.innerText = "Error: " + err.message;
-            }
-        }
+        // This path matches the structure where hotels is directly under data
+        let html = "<h3>Top Hotels:</h3>";
+        hotelData.data.hotels.forEach(h => {
+            html += `<div class="card">
+                <p><strong>Hotel:</strong> ${h.property.name}</p>
+                <p><strong>Price:</strong> ${h.property.priceBreakdown.grossPrice.value}</p>
+            </div>`;
+        });
+        div.innerHTML = html;
+    } catch (err) {
+        div.innerText = "Error: " + err.message;
+    }
+}
     </script>
 </body>
 </html>

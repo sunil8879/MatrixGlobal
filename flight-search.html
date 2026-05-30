@@ -20,37 +20,36 @@
 
     <script>
         let currentPage = 1;
-        async function searchFlights(page) {
-            currentPage = page;
-            const dep = document.getElementById('depInput').value;
-            const arr = document.getElementById('arrInput').value;
-            const date = document.getElementById('dateInput').value;
-            const div = document.getElementById('flightResults');
-            
-            div.innerText = "Searching...";
-            const KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91";
-            
-            try {
-                const response = await fetch(`https://google-flights2.p.rapidapi.com/api/v1/searchFlights?departure_id=${dep}&arrival_id=${arr}&outbound_date=${date}&page=${currentPage}`, {
-                    headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'google-flights2.p.rapidapi.com' }
-                });
-                const json = await response.json();
-                
-                let html = page === 1 ? "<h2>Flights:</h2>" : "";
-                json.data.itineraries.topFlights.forEach(f => {
-                    html += `<div class="card">
-                        <p><strong>Flight:</strong> ${f.flights[0].airline} (${f.flights[0].flight_number})</p>
-                        <p><strong>Cost:</strong> $${f.price}</p>
-                    </div>`;
-                });
-                div.innerHTML = html;
-                document.getElementById('nextBtn').style.display = "block";
-            } catch (err) { div.innerText = "Error: No flights found."; }
-        }
-
-        function loadNext() {
-            searchFlights(currentPage + 1);
-        }
+      async function searchFlights(page) {
+    const dep = document.getElementById('depInput').value;
+    const arr = document.getElementById('arrInput').value;
+    const date = document.getElementById('dateInput').value;
+    const div = document.getElementById('flightResults');
+    const KEY = "YOUR_GOOGLE_FLIGHTS_KEY";
+    
+    div.innerText = "Searching...";
+    
+    try {
+        const response = await fetch(`https://google-flights2.p.rapidapi.com/api/v1/searchFlights?departure_id=${dep}&arrival_id=${arr}&outbound_date=${date}&currency=USD`, {
+            headers: { 'X-RapidAPI-Key': KEY, 'X-RapidAPI-Host': 'google-flights2.p.rapidapi.com' }
+        });
+        const json = await response.json();
+        
+        let html = "<h2>Flights Found:</h2>";
+        // Path: json -> data -> itineraries -> topFlights
+        json.data.itineraries.topFlights.forEach(f => {
+            html += `<div class="card">
+                <p><strong>Flight:</strong> ${f.flights[0].airline} (${f.flights[0].flight_number})</p>
+                <p><strong>Time:</strong> ${f.departure_time} to ${f.arrival_time}</p>
+                <p><strong>Duration:</strong> ${f.duration.text}</p>
+                <p><strong>Cost:</strong> $${f.price}</p>
+            </div>`;
+        });
+        div.innerHTML = html;
+    } catch (err) { 
+        div.innerText = "Error: Check your inputs or API key."; 
+    }
+}
     </script>
 </body>
 </html>
