@@ -286,6 +286,81 @@ text-align: center;
     align-items: center;
     overflow: hidden; /* Keeps everything inside the 400px box */
 }
+
+
+
+
+
+
+
+/* --- MOBILE RESPONSIVE FIXES (768px) --- */
+@media screen and (max-width: 768px) {
+    /* Prevent body overflow */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100vw !important;
+    }
+
+    /* Force all elements to contain their width */
+    * {
+        box-sizing: border-box !important;
+        max-width: 100vw !important;
+    }
+
+    /* Panels Container */
+    .panels-container {
+        width: 100% !important;
+        padding: 10px !important;
+    }
+
+    .panel {
+        width: 90% !important; /* Stacked */
+        height: auto !important; /* Allow height to adapt */
+        margin: 0 auto 20px auto !important;
+    }
+
+    /* Search Bar */
+    #searchBar {
+        width: 90% !important;
+    }
+
+    /* Tables: Force them to fit the screen */
+    .sub-item table {
+        width: 100% !important;
+        table-layout: fixed !important; /* Forces content to wrap */
+        display: table !important;
+    }
+
+    .sub-item td, .sub-item th {
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        font-size: 12px !important; /* Shrink text for mobile tables */
+        padding: 5px !important;
+    }
+
+    /* Stats Grid */
+    .stats-container {
+        gap: 10px !important;
+        padding: 20px 5px !important;
+    }
+
+    .stat-card {
+        width: 45% !important; /* Two per row */
+        padding: 10px !important;
+    }
+
+    /* Knowledge Hub */
+    .knowledge-hub-wrapper {
+        width: 95% !important;
+        padding: 10px !important;
+    }
+    
+    /* Ensure long lists don't push width */
+    .list-style {
+        padding-left: 20px !important;
+        font-size: 16px !important;
+    }
+}
     </style>
 </head>
 <body>
