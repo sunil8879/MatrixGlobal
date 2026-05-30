@@ -10,23 +10,21 @@
     <div id="hotelResults"></div>
 
     <script>
-        async function runHotelSearch() {
-            const query = document.getElementById('hotelInput').value;
-            const div = document.getElementById('hotelResults');
-            div.innerText = "Searching...";
-            
-            // Replace with your real Booking.com key
-            const HOTEL_KEY = "4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91"; 
-            
-            const response = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchLocation?query=${query}`, {
-                headers: { 
-                    'X-RapidAPI-Key': HOTEL_KEY, 
-                    'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' 
-                }
-            });
-            const data = await response.json();
-            div.innerText = JSON.stringify(data);
+      async function runHotelSearch() {
+    const city = document.getElementById('hotelInput').value; 
+    const div = document.getElementById('hotelResults');
+    
+    // NOTE: You must find the 'searchHotels' endpoint in your RapidAPI dashboard
+    // This is the correct structure for the Booking.com API:
+    const response = await fetch(`https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels?query=${city}`, {
+        headers: { 
+            'X-RapidAPI-Key': '4d77880947mshfba562934f7f319p16c3fdjsn0d9c236a6a91', 
+            'X-RapidAPI-Host': 'booking-com15.p.rapidapi.com' 
         }
+    });
+    const data = await response.json();
+    div.innerText = JSON.stringify(data, null, 2);
+}
     </script>
 </body>
 </html>
