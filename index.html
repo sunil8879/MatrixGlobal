@@ -371,6 +371,15 @@ text-align: center;
     <p>Everything Global in One Portal.</p>
 </div>
 
+
+
+<div class="ticker-wrapper">
+    <div class="ticker-title">LIVE EDU NEWS</div>
+    <div class="ticker-content" id="newsTicker">Fetching latest global education updates...</div>
+</div>
+
+
+
     <div class="search-container">
         <input type="text" id="searchBar" placeholder="Search courses, universities, visas, CV..." onkeydown="handleSearch(event)">
     </div>
@@ -2543,7 +2552,26 @@ You track all spending via the provider's mobile app. This is safer and more eff
 
 
 
-
+<script>
+    async function fetchNews() {
+        const rssUrl = "https://thepienews.com/feed/"; // Live global education news source
+        const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+        
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            const ticker = document.getElementById('newsTicker');
+            
+            if(data.status === 'ok') {
+                const headlines = data.items.map(item => item.title).join("  •  •  •  ");
+                ticker.innerText = headlines;
+            }
+        } catch (err) {
+            ticker.innerText = "Stay updated with global education trends.";
+        }
+    }
+    fetchNews();
+</script>
 
 
 
